@@ -1,0 +1,56 @@
+<div class="container row justify-content-center bordered pad-10">
+  <div class="row col-12 justify-content-around">
+    @{int counter = 0;}
+    @foreach (int item in History.Get())
+    {
+        <div 
+          class="
+            col-1 align-content-center text-center bordered bold
+
+        ">@item</div>
+      counter++;
+    }
+  </div>
+  <hr class="col-12">
+  <div class="row col-8 justify-content-around">
+    <button 
+      @onclick="@Prev" class="btn btn-outline-dark col-2 sharp bold">Prev</button>
+    <button 
+      @onclick="@History.GoToEnd" class="btn btn-outline-dark col-2 sharp bold">Sort</button>
+    <button 
+      @onclick="@Next" class="btn btn-outline-dark col-2 sharp bold">Next</button>
+  </div>
+</div>
+
+@code{
+  [Parameter]
+  public int[] Input { get; set; }
+
+  Utils.Printer Printer = new Utils.Printer();
+
+  public ISelectionSort Sorter;
+
+  public IHistory<int[]> History;
+  protected override void OnParametersSet()
+  {
+    Sorter = new ISelectionSort(Input);
+    Sorter.Sort();
+
+    History = Sorter.History;
+  }
+
+  public void PrintHistory()
+  {
+    foreach (int[] item in History.ToArray())
+    {
+      Printer.PrintArray(item);
+    }
+  }
+
+  public void Prev() => History.Prev();
+
+  public void Next() => History.Next();
+
+
+
+}
